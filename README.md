@@ -67,6 +67,15 @@ NDK_HOME=D:\Android\ndk\27.2.12479018
 JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot
 ```
 
+Windows'ta **Geliştirici Modu** açık olmalı: Tauri, derlenen `.so` dosyasını
+`jniLibs` altına symlink'ler ve Windows symlink oluşturmayı yalnızca bu modda
+(veya yükseltilmiş bir kabukta) izin verir.
+
+```powershell
+# yükseltilmiş PowerShell
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v AllowDevelopmentWithoutDevLicense /d 1
+```
+
 Rust hedefleri:
 
 ```sh
