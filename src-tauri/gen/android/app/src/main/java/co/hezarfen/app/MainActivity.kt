@@ -29,6 +29,12 @@ class MainActivity : TauriActivity() {
   // webview applies the insets itself.
   override fun onWebViewCreate(webView: WebView) {
     this.webView = webView
+
+    // The page hides scrollbars in CSS, but those rules cannot reach the ones
+    // Android draws over the webview itself, which is what still flashes down
+    // the right edge while scrolling.
+    webView.isVerticalScrollBarEnabled = false
+    webView.isHorizontalScrollBarEnabled = false
     webView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> publishBottomInset() }
     // The first layout can land before the page has a document to set the
     // property on; this catches that case.
