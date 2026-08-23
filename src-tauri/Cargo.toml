@@ -1,0 +1,32 @@
+[package]
+name = "hezarfen-mobile"
+version = "0.1.0"
+description = "Hezarfen Campus & LMS, packaged for Android and iOS"
+edition = "2021"
+rust-version = "1.77.2"
+
+# Mobile builds compile the app as a shared library that the platform shell
+# loads; `tauri android/ios init` generates the projects that link against it.
+[lib]
+name = "hezarfen_mobile_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-os = "2"
+
+# The in-app origin server (see src/proxy.rs).
+axum = { version = "0.8", features = ["ws"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "macros", "sync", "time"] }
+tokio-tungstenite = { version = "0.26", features = ["rustls-tls-webpki-roots"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-webpki-roots", "stream", "http2"] }
+futures-util = "0.3"
+bytes = "1"
+log = "0.4"
+
+[features]
+# Used by `tauri dev`/CI to keep the devtools available in release builds.
+custom-protocol = ["tauri/custom-protocol"]

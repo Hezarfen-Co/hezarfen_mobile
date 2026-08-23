@@ -1,0 +1,41 @@
+name: sync-frontend
+
+# The submodule pins a frontend commit on purpose, so the mobile build cannot
+# break on an untested upstream change. This job proposes the bump instead:
+# it moves the pin to the latest main and opens a PR, where the `build`
+# workflow proves the new frontend still packages.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+      - name: Move the pin to frontend main
+        id: bump
+        run: |
+          git submodule update --remote --merge frontend
+          sha="$(git -C frontend rev-parse --short HEAD)"
+          subject="$(git -C frontend log -1 --pretty=%s)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "subject=$subject" >> "$GITHUB_OUTPUT"
+          git diff --quiet -- frontend && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+      - if: steps.bump.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+          branch: sync/frontend
+          commit-message: "frontend: bump to ${{ steps.bump.outputs.sha }}"
+          title: "frontend: bump to ${{ steps.bump.outputs.sha }}"
+          body: |
+            Submodule `frontend` bumped to `${{ steps.bump.outputs.sha }}`.
+
+            Upstream head: ${{ steps.bump.outputs.subject }}
+
+            Merge once the Android and iOS builds on this PR are green.

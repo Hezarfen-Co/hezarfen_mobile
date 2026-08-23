@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The app talks to its own in-app origin server (src-tauri/src/proxy.rs) over
+  plain HTTP on the loopback interface. Release builds set
+  usesCleartextTraffic=false, which would block exactly that, so cleartext is
+  re-enabled for loopback only — every other destination, including the
+  backend, still requires TLS.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

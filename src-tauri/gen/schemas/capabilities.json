@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Capabilities of the main window. The web app is served from the in-app loopback origin and uses no Tauri IPC, so this stays deliberately small.","local":true,"windows":["main"],"permissions":["core:default","os:default"]}}

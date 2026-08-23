@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug override: development backends are routinely plain HTTP on a LAN
+  address or behind `adb reverse`, so debug builds allow cleartext anywhere.
+  The release config (app/src/main) restricts it to loopback.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

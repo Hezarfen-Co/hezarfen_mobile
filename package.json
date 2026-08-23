@@ -1,0 +1,19 @@
+{
+  "name": "hezarfen-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "frontend:install": "cd frontend && bun install",
+    "frontend:dev": "cd frontend && bun run dev",
+    "frontend:build": "cd frontend && bun install --frozen-lockfile && bun run build",
+    "sync-frontend": "git submodule update --remote --merge frontend",
+    "dev": "cargo tauri dev",
+    "android:init": "cargo tauri android init",
+    "android:dev": "cargo tauri android dev",
+    "android:build": "cargo tauri android build",
+    "ios:init": "cargo tauri ios init",
+    "ios:dev": "cargo tauri ios dev",
+    "ios:build": "cargo tauri ios build"
+  }
+}
