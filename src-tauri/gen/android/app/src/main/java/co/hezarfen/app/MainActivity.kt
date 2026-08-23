@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -27,6 +28,9 @@ class MainActivity : TauriActivity() {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    // Must run before super.onCreate so the system keeps the launch screen up
+    // instead of flashing the plain window background.
+    installSplashScreen()
     enableEdgeToEdge()
     super.onCreate(savedInstanceState)
   }
