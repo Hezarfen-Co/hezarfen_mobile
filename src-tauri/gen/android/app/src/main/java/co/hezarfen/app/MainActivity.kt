@@ -1,6 +1,7 @@
 package co.hezarfen.app
 
 import android.os.Bundle
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -8,6 +9,22 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : TauriActivity() {
   private var webView: WebView? = null
+
+  /**
+   * What the page can ask the shell about the device it is running on. Bound to
+   * the webview, so it survives navigations and reloads — unlike a value pushed
+   * into a document, which dies with that document.
+   */
+  inner class ShellBridge {
+    /** Height of the gesture bar in CSS pixels; 0 when there is none. */
+    @JavascriptInterface
+    fun bottomInsetPx(): Float {
+      val view = webView ?: return 0f
+      val insets = ViewCompat.getRootWindowInsets(view) ?: return 0f
+      return insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom /
+        view.resources.displayMetrics.density
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
@@ -29,6 +46,7 @@ class MainActivity : TauriActivity() {
   // webview applies the insets itself.
   override fun onWebViewCreate(webView: WebView) {
     this.webView = webView
+    webView.addJavascriptInterface(ShellBridge(), "HezarfenShell")
 
     // The page hides scrollbars in CSS, but those rules cannot reach the ones
     // Android draws over the webview itself, which is what still flashes down
